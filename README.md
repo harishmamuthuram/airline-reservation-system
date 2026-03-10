@@ -3,8 +3,9 @@ A Python program that simulates an airline reservation system with features for 
 This project was created as part of my CBSE Grade 12 Computer Science project.
 
 The program simulates an airline reservation system where users can:
-- View available flights
 - Book tickets
+- Book a seat
+- Cancel reservation 
 - Manage passenger details
 
 Language used: Python
