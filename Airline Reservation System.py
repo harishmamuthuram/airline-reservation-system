@@ -1,54 +1,71 @@
-plane={}
-departure=input("Departure: ")
-arrival=input("Arrival: ")
-date=input("Date of travel: ")
+import pickle  
 
-while True:
-        print("Please choose an option: ")
-        print("1. Reserve a Seat")
-        print("2. Cancel a Reservation")
-        print("3. Display Reservations")
-        print("4. Save Reservations")
-        print("5. Exit")
-        
-        a=int(input("Enter a choice: "))
+f = open("plane.dat", "wb")  
+pickle.dump({}, f)  
+f.close()  
+
+f = open("plane.dat", "rb")  
+plane = pickle.load(f)  
+f.close()  
+
+print("Welcome to ABC Airways, please proceed to make a booking.")  
+print()  
+
+departure = input("Departure: ")  
+arrival = input("Arrival: ")  
+date = input("Date of travel: ")  
+
+ticket_price = 500   
+
+while True:  
+    print()   
+    print("1. Reserve Seats")   
+    print("2. Cancel booking")   
+    print("3. Show Reservations")   
+    print("4. Save Reservations")   
+    print("5. Exit")   
+    ch = int(input("Please enter your choice: "))
+    print()
     
-        if a == 1:
-            row  = int(input("Enter a row: "))
-            column  = int(input("Enter a seat number: "))
-            seat = (row - 1) * 6 + column - 1                      
+    if ch == 1:   
+        num = int(input("Please enter the number of passengers: "))   
+        for i in range(num):   
+            name = input("Passenger " + str(i+1) + " name: ")   
+            seat = input("Seat (like 12A): ").upper()   
+            if seat in plane:   
+                print("Seat", seat, "already booked by", plane[seat]['name'])   
+            else:   
+                plane[seat] = {'name': name, 'passenger_no': i+1, 'price': ticket_price}   
+                print("Booked seat", seat, "for", name)   
+        total = num * ticket_price   
+        print("Total price for", num, "passengers is", total)   
+    
+    elif ch == 2:   
+        seat = input("Please select the seat you would like to cancel: ").upper()   
+        if seat in plane:   
+            refund = plane[seat]['price']   
+            name = plane[seat]['name']   
+            del plane[seat]   
+            print("Cancelled booking for", name)   
+            print("Refund amount:", refund)   
+    
+    elif ch == 3:   
+        print("Bookings on", date, "from", departure, "to", arrival)   
+        for s in plane:   
+            print("Seat", s, "booked for", plane[s]['name'], "price:", plane[s]['price'])   
+    
+    elif ch == 4:   
+        f = open("plane.dat", "wb")   
+        pickle.dump(plane, f)   
+        f.close()   
+        print("Reservations saved.")   
+    
+    elif ch == 5:   
+        print("Thank you for choosing to fly with us!")
         
-            if seat in plane:
-                name = plane[seat]
-                print("Seat", (seat + 1), "has already been reserved by " + plane[seat])
-            else:
-                name = input("Enter your name: ")
-                plane[seat] = name
-                print("Seat", (seat + 1), "has been reserved for", name)
-                print ((seat + 1)," ", plane[seat])  
-                                 
-        elif a == 2:
-            row = int(input("Row: "))
-            column = int(input("Seat: "))
-            seat = (row - 1) * 6 + column - 1
-            
-            if seat in plane:
-                del plane[seat]
-                print("The reservation for seat", (seat + 1), "has been cancelled.")
-                input("Press enter to continue")
-            else:
-                print("Seat", (seat + 1), "is not currently reserved by anyone.")
-                input("Press enter to continue")
-                   
-        elif a == 3:
-            print("Reservations:")
-            print("Departing from",departure,"arriving in", arrival, "on",date)
-            for key in plane:
-                print((key + 1), "\t", plane[key])
-                
-        elif a == 4:
-            print("Airline reservation saved")
+        break   
+    
+    else:
+        
+        break 
 
-        elif a == 5:
-            print("Thank you for choosing to fly with us!")
-            break
